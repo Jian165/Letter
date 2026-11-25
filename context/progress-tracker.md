@@ -81,7 +81,8 @@ Update this file after every completed feature. Any AI agent reading this should
 - The sealed site uses `lib/sealed-content.ts` as its build-time source of truth and ignores `#card=` hashes.
 - Sealed visitors get the fixed letter and one fixed music track; Personalize and Copy controls are not rendered. Fold back and music play/pause remain available.
 - GitHub Pages uses a project-site URL (`https://<username>.github.io/<repo>/`) with `basePath` supplied by `actions/configure-pages`.
-- `withBasePath()` prefixes root-relative audio paths for Pages; full `https://` URLs stay unchanged.
+- `withBasePath()` prefixes root-relative audio and bundled sealed image paths for Pages; full `https://` URLs stay unchanged.
+- The sealed keepsake photo is bundled at `public/images/keepsake.jpg` and referenced from `SEALED_LETTER.photoUrl`; the editable default stays photo-free.
 - The earlier owner-PIN idea is not part of the sealed deployment; immutability comes from the static build, not client-side storage.
 
 ---
@@ -102,3 +103,4 @@ Update this file after every completed feature. Any AI agent reading this should
 - 2026-11-26: Replaced placeholder content with the exact KC dedication letter and `Jhon Mark` signature in both editable and sealed defaults; closing is `Love always,`.
 - 2026-11-26: Sealed viewer gains a session-only volume slider below the actions and above the CC BY credit; music fades now clamp all volume writes and retarget on live volume/mute changes.
 - 2026-11-26: Paper crease hairlines moved into the scrolling letter surface so they scroll with the text instead of staying fixed on the envelope.
+- 2026-11-26: Added the user's keepsake photo to the sealed letter at `public/images/keepsake.jpg`; the supplied `.png` file contained JPEG data, so it was renamed to `.jpg` and wired through `withBasePath()`.

@@ -209,6 +209,7 @@ The prototype's geometry, timing functions, z-index layering, colors, and copy a
 - No hardcoded hex values or raw Tailwind palette classes in components — use CSS variables from `ui-tokens.md`.
 - Default letter copy and limits (40 / 2400 / 40 / 500 / 45 chars) come from `lib/letter-state.ts`, never duplicated.
 - Local photo uploads are preview-only; never claim they are included in a copied link.
+- The sealed keepsake photo is a bundled public asset (`public/images/keepsake.jpg`) referenced through `withBasePath()`; the editable default remains photo-free.
 - Music never autoplays before a user gesture; `play()` promise rejection is silent (or a single toast for a failed track load).
 - SFX (Web Audio) and music (`<audio>`) are separate systems; muting one does not imply muting the other.
 - Keyboard path: envelope is `role="button"` + `tabindex="0"` while closed; drawer has a close button and backdrop click; focus is not trapped but must be reachable.

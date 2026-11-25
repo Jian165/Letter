@@ -168,7 +168,7 @@ File: `components/letter/LetterPaper.tsx` — Built 2026-11-26
 | Body | `font-editorial text-ink-sepia/90`, `clamp(1.06rem, 2.1vw, 1.28rem)`, `line-height: 1.75`, `whitespace-pre-line` |
 | Signature | `mt-8 pt-4 border-t border-ink-hairline`, "Love always," in `text-ink-quiet`, name `font-handwriting text-terracotta` `clamp(1.6rem, 3.2vw, 2.2rem)` |
 
-**Pattern notes:** All content from props. Newlines preserved. Salutation is `Dear {recipient},`; default closing is `Love always,` above the sender signature. The crease layer lives inside `.letter-ink-inner`, so it scrolls with the letter text. Polaroid and caption hide together when no photo or image error. Date is formatted during render from `toLocaleDateString`; photo error state is keyed by active source instead of reset in an effect.
+**Pattern notes:** All content from props. Newlines preserved. Salutation is `Dear {recipient},`; default closing is `Love always,` above the sender signature. The crease layer lives inside `.letter-ink-inner`, so it scrolls with the letter text. Polaroid and caption hide together when no photo or image error; the sealed build ships a bundled keepsake photo at `/images/keepsake.jpg` while the editable default stays photo-free. Date is formatted during render from `toLocaleDateString`; photo error state is keyed by active source instead of reset in an effect.
 
 ### TapHint
 
