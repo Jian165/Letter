@@ -1,11 +1,11 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 import { BackgroundMusic } from "@/components/letter/BackgroundMusic";
 import { LetterActions } from "@/components/letter/LetterActions";
 import { OrigamiEnvelope } from "@/components/letter/OrigamiEnvelope";
-import { PersonalizationSheet } from "@/components/letter/PersonalizationSheet";
 import { SunriseScene } from "@/components/letter/SunriseScene";
 import { ToastPill } from "@/components/letter/ToastPill";
 import { playPaperAndDawnSound } from "@/lib/letter-sound";
@@ -30,6 +30,20 @@ import type {
 
 const DEFAULT_VOLUME = 0.7;
 
+const PersonalizationSheet = dynamic(
+  () =>
+    import("@/components/letter/PersonalizationSheet").then(
+      (module) => module.PersonalizationSheet,
+    ),
+  { ssr: false },
+);
+
+function isCoarsePointer(): boolean {
+  return (
+    typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches
+  );
+}
+
 type MusicSnapshot = MusicSettings & {
   playing: boolean;
 };
@@ -43,6 +57,7 @@ export function LetterExperience() {
   const [phase, setPhase] = useState<LetterPhase>("closed");
   const [sharedMode, setSharedMode] = useState(false);
   const [editorOpen, setEditorOpen] = useState(false);
+  const [editorLoaded, setEditorLoaded] = useState(false);
   const [toastMessage, setToastMessage] = useState("Link copied to clipboard");
   const [toastVisible, setToastVisible] = useState(false);
   const [musicSettings, setMusicSettings] = useState<MusicSettings>(() =>
@@ -134,8 +149,14 @@ export function LetterExperience() {
     clearTransitionTimers();
     setPhase("opening");
     playPaperAndDawnSound(true);
-    motesRef.current?.burst();
-    musicRef.current?.start(musicSettings.trackId);
+
+    if (isCoarsePointer()) {
+      scheduleTransition(() => motesRef.current?.burst(), 500);
+    } else {
+      motesRef.current?.burst();
+      musicRef.current?.start(musicSettings.trackId);
+    }
+
     scheduleTransition(() => setPhase("open"), 480);
   }, [
     clearTransitionTimers,
@@ -179,6 +200,7 @@ export function LetterExperience() {
     }
 
     musicSnapshotRef.current = { ...musicSettings, playing: musicPlaying };
+    setEditorLoaded(true);
     setEditorOpen(true);
   }, [musicPlaying, musicSettings, sealed]);
 
@@ -273,7 +295,7 @@ export function LetterExperience() {
 
   return (
     <>
-      <SunriseScene motesRef={motesRef} />
+      <SunriseScene motesRef={motesRef} motesPaused={editorOpen} />
       <BackgroundMusic
         musicRef={musicRef}
         volume={musicSettings.volume}
@@ -346,7 +368,7 @@ export function LetterExperience() {
         ) : null}
       </main>
 
-      {sealed ? null : (
+      {sealed || !editorLoaded ? null : (
         <PersonalizationSheet
           open={editorOpen}
           sharedMode={sharedMode}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { resolveLetter } from "@/lib/letter-state";
 import type { LetterState } from "@/types";
 
@@ -16,11 +16,15 @@ export function LetterPaper({ letter, localPreview }: Props) {
     src: activePhoto,
     visible: true,
   });
-  const dateLabel = new Date().toLocaleDateString(undefined, {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
+  const dateLabel = useMemo(
+    () =>
+      new Date().toLocaleDateString(undefined, {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
+    [],
+  );
   const photoVisible = photoState.src === activePhoto ? photoState.visible : true;
 
   return (
@@ -62,6 +66,8 @@ export function LetterPaper({ letter, localPreview }: Props) {
               src={activePhoto}
               alt="Shared memory"
               className="keepsake-photo"
+              decoding="async"
+              loading="lazy"
               onError={() => setPhotoState({ src: activePhoto, visible: false })}
             />
             {clean.caption ? (

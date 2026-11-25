@@ -4,16 +4,17 @@ import type { MotesHandle } from "@/types";
 
 type Props = {
   motesRef: Ref<MotesHandle>;
+  motesPaused?: boolean;
 };
 
-export function SunriseScene({ motesRef }: Props) {
+export function SunriseScene({ motesRef, motesPaused = false }: Props) {
   return (
     <>
       <div className="sunrise-sky-layer" aria-hidden="true" />
       <div className="horizon-bloom" aria-hidden="true" />
       <div className="predawn-stars" aria-hidden="true" />
       <div className="sunrise-orb" aria-hidden="true" />
-      <MotesCanvas motesRef={motesRef} />
+      <MotesCanvas motesRef={motesRef} paused={motesPaused} />
     </>
   );
 }

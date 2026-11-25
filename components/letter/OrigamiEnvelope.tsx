@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { KeyboardEvent } from "react";
 import { LetterPaper } from "@/components/letter/LetterPaper";
 import { resolveLetter } from "@/lib/letter-state";
@@ -23,7 +24,7 @@ function getPhaseClass(phase: LetterPhase): string {
   return "";
 }
 
-export function OrigamiEnvelope({
+function OrigamiEnvelopeComponent({
   phase,
   letter,
   localPreview,
@@ -83,3 +84,5 @@ export function OrigamiEnvelope({
     </article>
   );
 }
+
+export const OrigamiEnvelope = memo(OrigamiEnvelopeComponent);

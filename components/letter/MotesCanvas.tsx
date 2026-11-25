@@ -6,6 +6,7 @@ import type { MotesHandle } from "@/types";
 
 type Props = {
   motesRef?: Ref<MotesHandle>;
+  paused?: boolean;
 };
 
 type Mote = {
@@ -95,7 +96,7 @@ function drawMotes(
   context.globalAlpha = 1;
 }
 
-export function MotesCanvas({ motesRef }: Props) {
+export function MotesCanvas({ motesRef, paused = false }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const contextRef = useRef<CanvasRenderingContext2D | null>(null);
   const motesInternalRef = useRef<Mote[]>([]);
@@ -134,35 +135,100 @@ export function MotesCanvas({ motesRef }: Props) {
     colorsRef.current = getMoteColors();
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotionRef.current = motionQuery.matches;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+    const frameInterval = coarsePointer ? 33 : 16;
+    const moteLimit = coarsePointer ? 12 : 24;
+    const moteDivisor = coarsePointer ? 40 : 24;
+    let resizeFrame = 0;
+    let lastFrameTime = 0;
 
     const resize = (): void => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      if (canvas.width === width && canvas.height === height) {
+        return;
+      }
+      canvas.width = width;
+      canvas.height = height;
     };
 
-    const animate = (): void => {
-      drawMotes(context, motesInternalRef.current, true);
+    const scheduleResize = (): void => {
+      if (resizeFrame !== 0) {
+        return;
+      }
+      resizeFrame = window.requestAnimationFrame(() => {
+        resizeFrame = 0;
+        resize();
+      });
+    };
+
+    const stop = (): void => {
+      if (frameRef.current !== 0) {
+        window.cancelAnimationFrame(frameRef.current);
+        frameRef.current = 0;
+      }
+    };
+
+    const animate = (now: number): void => {
+      frameRef.current = 0;
+      if (document.hidden || paused) {
+        return;
+      }
+
+      if (now - lastFrameTime >= frameInterval) {
+        lastFrameTime = now;
+        drawMotes(context, motesInternalRef.current, true);
+      }
+
       frameRef.current = window.requestAnimationFrame(animate);
     };
 
+    const start = (): void => {
+      if (reducedMotionRef.current || document.hidden || paused || frameRef.current !== 0) {
+        return;
+      }
+      lastFrameTime = 0;
+      frameRef.current = window.requestAnimationFrame(animate);
+    };
+
+    const handleVisibility = (): void => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    };
+
     resize();
-    const total = Math.min(24, Math.floor(window.innerWidth / 24));
-    motesInternalRef.current = Array.from({ length: total }, () =>
-      createMote(canvas.width, canvas.height, colorsRef.current, false),
-    );
+    if (motesInternalRef.current.length === 0) {
+      const total = Math.min(moteLimit, Math.floor(window.innerWidth / moteDivisor));
+      motesInternalRef.current = Array.from({ length: total }, () =>
+        createMote(canvas.width, canvas.height, colorsRef.current, false),
+      );
+    }
 
     if (reducedMotionRef.current) {
       drawMotes(context, motesInternalRef.current, false);
     } else {
-      animate();
+      start();
     }
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", scheduleResize);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
-      window.removeEventListener("resize", resize);
-      window.cancelAnimationFrame(frameRef.current);
+      window.removeEventListener("resize", scheduleResize);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      if (resizeFrame !== 0) {
+        window.cancelAnimationFrame(resizeFrame);
+      }
+      stop();
       contextRef.current = null;
+    };
+  }, [paused]);
+
+  useEffect(() => {
+    return () => {
       motesInternalRef.current = [];
     };
   }, []);

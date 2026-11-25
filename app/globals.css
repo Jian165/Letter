@@ -219,7 +219,7 @@
     filter: blur(20px);
     pointer-events: none;
     z-index: 1;
-    will-change: transform, opacity;
+    will-change: auto;
     transition:
       transform var(--duration-sky) var(--ease-out-soft),
       opacity 1.2s ease;
@@ -229,6 +229,7 @@
   body.letter-unfolded .sunrise-orb {
     transform: translateX(-50%) translateY(-42%) scale(1.16);
     opacity: 1;
+    will-change: transform, opacity;
   }
 
   #motes-canvas {
@@ -804,13 +805,20 @@
     align-items: flex-end;
     justify-content: center;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s ease;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s linear 0.3s;
   }
 
   .editor-backdrop.active {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
+    transition:
+      opacity 0.3s ease,
+      visibility 0s;
   }
 
   .editor-sheet {
@@ -947,6 +955,39 @@
 
   .toast-pill.show {
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (max-width: 639px) {
+  .origami-letter {
+    transition-property: width, height, border-radius, transform;
+  }
+
+  .fold-left,
+  .fold-right,
+  .fold-bottom,
+  .fold-top {
+    filter: none;
+    backface-visibility: hidden;
+  }
+
+  .sunrise-orb {
+    filter: blur(8px);
+  }
+
+  .paper-grain-overlay {
+    opacity: 0.3;
+    mix-blend-mode: normal;
+  }
+
+  .seal-glow {
+    animation-iteration-count: 2;
+  }
+
+  .ghost-link,
+  .editor-backdrop {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 }
 
