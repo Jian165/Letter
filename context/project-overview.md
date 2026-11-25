@@ -93,7 +93,7 @@ The music pill appears only when a track is selected. The closed envelope itself
 - `NEXT_PUBLIC_SEALED=true` selects the sealed build from `lib/sealed-content.ts`.
 - URL hashes are ignored and cleared; the fixed letter, photo, caption, and music track render for every visitor.
 - Only "Fold back" and the optional music pill appear below the letter; Personalize and Copy controls are not rendered.
-- A small CC BY credit line remains visible below the actions so the bundled music attribution survives without the drawer.
+- A session-only volume slider and a small CC BY credit line remain below the actions so playback is adjustable and the bundled music attribution survives without the drawer.
 - GitHub Actions deploys the static `out/` export from `main` to `https://jian165.github.io/Letter/`.
 
 ---

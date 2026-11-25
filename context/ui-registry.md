@@ -160,14 +160,15 @@ File: `components/letter/LetterPaper.tsx` — Built 2026-11-26
 | Root | `.letter-ink-content` absolute-ish inner surface, z-index 4, `height: 100%`, `overflow-y: auto`, `overscroll-behavior: contain` |
 | Padding | `clamp(24px, 4.5vw, 48px) clamp(24px, 5vw, 56px)` |
 | Reveal | opacity 0 + translateY(8px) → 1/0 when `.is-open`, `0.55s ease 0.22s` |
-| Inner measure | `.letter-ink-inner` `max-width: 54ch`, centered |
+| Inner measure | `.letter-ink-inner` `max-width: 54ch`, centered, `position: relative` |
+| Creases | `.paper-creases` inside the scrolling inner surface, `position: absolute`, `z-index: 0`, hairlines `var(--color-paper-edge)` / `--color-paper-edge-soft`; content siblings `z-index: 1` |
 | Header | date `text-ink-quiet text-xs sm:text-sm italic`, sunrise SVG `text-terracotta/75`, `mb-5` |
 | Salutation | `font-handwriting text-ink-sepia`, `clamp(1.75rem, 3.6vw, 2.5rem)`, `mb-4` |
 | Polaroid | `.polaroid-keepsake` width `clamp(195px, 42vw, 270px)`, `rotate(-1.5deg)`, `bg-paper-white`, tape strip above, 4:3 `object-cover object-top`, caption `font-handwriting` |
 | Body | `font-editorial text-ink-sepia/90`, `clamp(1.06rem, 2.1vw, 1.28rem)`, `line-height: 1.75`, `whitespace-pre-line` |
-| Signature | `mt-8 pt-4 border-t border-ink-hairline`, "Love Always," in `text-ink-quiet`, name `font-handwriting text-terracotta` `clamp(1.6rem, 3.2vw, 2.2rem)` |
+| Signature | `mt-8 pt-4 border-t border-ink-hairline`, "Love always," in `text-ink-quiet`, name `font-handwriting text-terracotta` `clamp(1.6rem, 3.2vw, 2.2rem)` |
 
-**Pattern notes:** All content from props. Newlines preserved. Salutation is `Dear {recipient},`; default closing is `Love Always,` above the sender signature. Polaroid and caption hide together when no photo or image error. Date is formatted during render from `toLocaleDateString`; photo error state is keyed by active source instead of reset in an effect.
+**Pattern notes:** All content from props. Newlines preserved. Salutation is `Dear {recipient},`; default closing is `Love always,` above the sender signature. The crease layer lives inside `.letter-ink-inner`, so it scrolls with the letter text. Polaroid and caption hide together when no photo or image error. Date is formatted during render from `toLocaleDateString`; photo error state is keyed by active source instead of reset in an effect.
 
 ### TapHint
 
@@ -233,13 +234,29 @@ File: `components/letter/PersonalizationSheet.tsx` — Built 2026-11-26
 
 **Pattern notes:** `'use client'`. Local draft state only; commits on submit/copy. `maxLength` on all fields. Backdrop click and close button dismiss without commit. In shared-recipient mode fields start blank and label reads "Reply / Write one" on the trigger. Selecting a music option previews immediately via a callback to the parent (click is a user gesture); dismissing without committing restores the previous track.
 
+### SealedVolumeControl
+
+File: `components/letter/LetterExperience.tsx` + `app/globals.css` — Built 2026-11-26
+
+| Property | Class / Value |
+|---|---|
+| Element | `<div className="sealed-volume-control">` between `.subtle-footer-actions` and `.sealed-music-credit` |
+| Visibility | rendered only when sealed + phase `open` + selected track is not `none` |
+| Label | `.sealed-volume-label`, `var(--color-ink-faint)`, `font-size: 0.7rem`, text "Volume" |
+| Slider | `.sealed-volume-slider`, native range, `min=0`, `max=1`, `step=0.01`, `accent-color: var(--color-terracotta)`, `cursor: pointer` |
+| Spacing | `width: min(90vw, 18rem)`, `gap: 0.55rem`, `margin-top: clamp(0.4rem, 1.2vh, 0.7rem)` |
+| Hover/focus | native range affordances; no custom border, background, radius, or shadow |
+| Accent | terracotta thumb/track accent only |
+
+**Pattern notes:** Adds a playback control, not a letter-setting control, so sealed mode still hides Personalize/Copy. Value is bound to `musicSettings.volume` and session-only; changes retarget the active fade in `BackgroundMusic`.
+
 ### SealedMusicCredit
 
 File: `components/letter/LetterExperience.tsx` + `app/globals.css` — Built 2026-11-26
 
 | Property | Class / Value |
 |---|---|
-| Element | `<p className="sealed-music-credit">` below `.subtle-footer-actions` in sealed mode |
+| Element | `<p className="sealed-music-credit">` below `.sealed-volume-control` in sealed mode |
 | Visibility | rendered only when sealed + phase `open` + selected track has credit |
 | Text — primary | `color: var(--color-ink-faint)`, `font-size: 0.7rem`, `line-height: 1.5` |
 | Text — link | same ink-faint color, `text-decoration: underline`, `text-decoration-color: var(--color-ink-edge)`, `text-underline-offset: 2px` |

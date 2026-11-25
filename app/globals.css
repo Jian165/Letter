@@ -354,6 +354,7 @@
   .paper-creases {
     position: absolute;
     inset: 0;
+    z-index: 0;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.45s ease;
@@ -661,8 +662,14 @@
   }
 
   .letter-ink-inner {
+    position: relative;
     max-width: 54ch;
     margin: 0 auto;
+  }
+
+  .letter-ink-inner > :not(.paper-creases) {
+    position: relative;
+    z-index: 1;
   }
 
   .letter-salutation-fluid {
@@ -719,6 +726,24 @@
     transition:
       opacity 0.5s ease 0.35s,
       transform 0.5s ease 0.35s;
+  }
+
+  .sealed-volume-control {
+    display: flex;
+    width: min(90vw, 18rem);
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    margin-top: clamp(0.4rem, 1.2vh, 0.7rem);
+    color: var(--color-ink-faint);
+    font-size: 0.7rem;
+  }
+
+  .sealed-volume-slider {
+    width: 100%;
+    max-width: 10rem;
+    accent-color: var(--color-terracotta);
+    cursor: pointer;
   }
 
   .sealed-music-credit {

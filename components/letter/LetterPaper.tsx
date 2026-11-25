@@ -26,6 +26,11 @@ export function LetterPaper({ letter, localPreview }: Props) {
   return (
     <div className="letter-ink-content">
       <div className="letter-ink-inner">
+        <div className="paper-creases" aria-hidden="true">
+          <div className="crease-h-top" />
+          <div className="crease-h-bottom" />
+        </div>
+
         <div className="mb-5 flex items-center justify-between text-ink-quiet">
           <span className="text-xs tracking-wide italic sm:text-sm">
             {dateLabel}
@@ -73,7 +78,7 @@ export function LetterPaper({ letter, localPreview }: Props) {
 
         <div className="mt-8 flex flex-col items-end border-t border-ink-hairline pt-4 text-right">
           <span className="mb-0.5 text-xs italic text-ink-quiet sm:text-sm">
-            Love Always,
+            Love always,
           </span>
           <p className="letter-signature-fluid font-handwriting font-semibold text-terracotta">
             {clean.sender}

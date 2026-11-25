@@ -38,6 +38,7 @@ Caveat              → salutation, signature, recipient name, drawer heading (-
 - The reference HTML's arbitrary classes (`text-[#3D281E]/55`) must become token classes (`text-ink-quiet`) or CSS variables.
 - SVG presentation attributes cannot resolve CSS variables — set colors with `style={{ stroke: "var(--color-...)" }}` or in named CSS rules.
 - The envelope and letter paper are always paper-cream; color lives in the sky, seals, and accents, never on the paper surface.
+- Crease hairlines belong to the scrolling letter surface so they move with the text; the paper grain overlay stays on the envelope.
 
 ---
 
@@ -61,7 +62,7 @@ Caveat              → salutation, signature, recipient name, drawer heading (-
 - Creases appear only after the sheet is open.
 - The letter body preserves newlines (`whitespace-pre-line`); text is plain, not HTML.
 - The Polaroid is hidden entirely when there is no photo or the image fails to load; the caption hides with it.
-- The signature divider and "Love Always," line are part of the letter, not the envelope.
+- The signature divider and "Love always," line are part of the letter, not the envelope.
 
 ---
 
@@ -89,7 +90,7 @@ Caveat              → salutation, signature, recipient name, drawer heading (-
 - Volume and mute are local session controls only; never encode them in the hash.
 - No audio uploads, no external audio URLs, no streaming providers, no media-player libraries.
 - Bundled MP3s are local CC BY tracks by Kevin MacLeod; keep visible attribution in the drawer when a music track is selected.
-- Sealed builds use one fixed track from `lib/sealed-content.ts`; the picker is absent, but a small credit line stays visible below the open letter actions.
+- Sealed builds use one fixed track from `lib/sealed-content.ts`; the picker is absent, but a session-only volume slider and a small credit line stay visible below the open letter actions.
 - SFX (paper rustle/chime) and background music are separate: muting one does not mute the other.
 - Failed `play()` is silent; a failed MP3 load shows one toast and leaves the letter readable.
 

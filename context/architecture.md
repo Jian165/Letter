@@ -150,7 +150,9 @@ NEXT_PUBLIC_SEALED=true
 lib/sealed-content.ts → LetterExperience initial state
           ↓
 LetterActions hides Personalize/Copy; PersonalizationSheet is not rendered
-          ↓
+           ↓
+sealed volume slider updates musicSettings.volume for the current session
+           ↓
 hash is cleared and ignored; fixed letter + music render for every visitor
 ```
 
@@ -176,7 +178,7 @@ Browser API failures (audio blocked, clipboard denied, malformed hash, missing M
 - `t` is omitted from the hash when the track is `"none"`; an invalid `t` decodes to `"none"` with a single `console.warn`.
 - `src` is derived from the allowlist (`/audio/${id}.mp3`), never from raw user input.
 - Root-relative audio paths are prefixed by `withBasePath()` so GitHub Pages project sites resolve them under `/<repo>/`.
-- Volume and mute are local session state in `LetterExperience`; they are never encoded into the hash.
+- Volume and mute are local session state in `LetterExperience`; they are never encoded into the hash. Sealed builds expose the volume slider but not mute or any letter-editing control.
 - One `<audio loop preload="none">` element only. No parallel players, no audio uploads, no external audio URLs.
 
 ---

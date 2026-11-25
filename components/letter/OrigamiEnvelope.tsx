@@ -58,11 +58,6 @@ export function OrigamiEnvelope({
     >
       <div className="paper-grain-overlay" aria-hidden="true" />
 
-      <div className="paper-creases" aria-hidden="true">
-        <div className="crease-h-top" />
-        <div className="crease-h-bottom" />
-      </div>
-
       <LetterPaper letter={clean} localPreview={localPreview} />
 
       <div className="origami-flaps-layer" aria-hidden="true">

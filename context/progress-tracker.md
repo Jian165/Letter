@@ -71,9 +71,9 @@ Update this file after every completed feature. Any AI agent reading this should
 ### Follow-up decisions (2026-11-26)
 
 - Sunrise uses a feathered mask/opacity/translate crossfade instead of a hard `clip-path` reveal; `--duration-sky` is `2.4s`.
-- Default letter content is the user's KC wedding dedication, with `Dear KC,`, the custom body, `Love Always,`, and `Jomar`.
+- Default letter content is the user's exact KC dedication, with `Dear KC,`, the custom body, `Love always,`, and `Jhon Mark`.
 - Message limit raised from `450` to `2400`; default photo and caption are empty.
-- Wax seal and site icon use the `JM` monogram so the letter reads as personally sent by Jomar.
+- Wax seal and site icon use the `JM` monogram so the letter reads as personally sent by Jhon Mark.
 
 ### Sealed deployment decisions (2026-11-26)
 
@@ -99,3 +99,6 @@ Update this file after every completed feature. Any AI agent reading this should
 - 2026-11-26: Sealed static export uses `output: "export"` plus `build:sealed`; `.github/workflows/deploy.yml` deploys `out/` from `main` to GitHub Pages with project base path.
 - 2026-11-26: Target repo is `Jian165/Letter`; expected Pages URL is `https://jian165.github.io/Letter/`. Sealed mode shows a visible CC BY credit line because the drawer is hidden.
 - 2026-11-26: Initial commit `f0a632c` pushed to `main`; workflow run #1 failed because Pages is not yet enabled/configured to GitHub Actions, which requires a one-time settings change by the repo owner.
+- 2026-11-26: Replaced placeholder content with the exact KC dedication letter and `Jhon Mark` signature in both editable and sealed defaults; closing is `Love always,`.
+- 2026-11-26: Sealed viewer gains a session-only volume slider below the actions and above the CC BY credit; music fades now clamp all volume writes and retarget on live volume/mute changes.
+- 2026-11-26: Paper crease hairlines moved into the scrolling letter surface so they scroll with the text instead of staying fixed on the envelope.

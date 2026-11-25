@@ -207,6 +207,7 @@ Build the folded paper object and its invitation.
 
 - Sealed build renders the fixed letter and music from `lib/sealed-content.ts`.
 - `LetterActions` shows only Fold back and the optional music pill; Personalize is absent and the drawer is not rendered.
+- A session-only volume slider appears below the actions when a track is selected; the CC BY credit stays visible below it.
 - URL hashes are cleared and ignored in sealed mode.
 
 **Logic:**

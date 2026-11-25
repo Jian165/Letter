@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import type { ChangeEvent } from "react";
 import { BackgroundMusic } from "@/components/letter/BackgroundMusic";
 import { LetterActions } from "@/components/letter/LetterActions";
 import { OrigamiEnvelope } from "@/components/letter/OrigamiEnvelope";
@@ -251,6 +252,21 @@ export function LetterExperience() {
     showToast("Music unavailable — playing without sound");
   }, [showToast]);
 
+  const handleSealedVolumeChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>): void => {
+      const nextVolume = Number(event.target.value);
+      if (!Number.isFinite(nextVolume)) {
+        return;
+      }
+      setMusicSettings((current) => ({
+        ...current,
+        volume: Math.min(1, Math.max(0, nextVolume)),
+        muted: false,
+      }));
+    },
+    [],
+  );
+
   const sealedMusicCredit = sealed
     ? getMusicTrack(musicSettings.trackId).credit
     : null;
@@ -288,6 +304,25 @@ export function LetterExperience() {
           onPersonalize={handleOpenEditor}
           onToggleMusic={handleToggleMusic}
         />
+
+        {sealed && phase === "open" && musicSettings.trackId !== "none" ? (
+          <div className="sealed-volume-control">
+            <label className="sealed-volume-label" htmlFor="sealed-music-volume">
+              Volume
+            </label>
+            <input
+              aria-label="Music volume"
+              className="sealed-volume-slider"
+              id="sealed-music-volume"
+              max={1}
+              min={0}
+              onChange={handleSealedVolumeChange}
+              step={0.01}
+              type="range"
+              value={musicSettings.volume}
+            />
+          </div>
+        ) : null}
 
         {sealed && phase === "open" && sealedMusicCredit ? (
           <p className="sealed-music-credit">

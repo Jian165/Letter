@@ -21,7 +21,7 @@ Last updated: 2026-11-26
 - Background music uses one `<audio loop preload="none">` with allowlisted sources `dawn`, `rain`, `ember`, plus `none`; play/stop are driven imperatively from user gestures; Web Audio remains reserved for SFX.
 - Music presets are local CC BY 4.0 tracks by Kevin MacLeod: "There is Romance", "What Is Love", and "Touching Moments Four - Melody"; the drawer credits the selected track.
 - Sunrise uses a feathered mask/opacity/translate crossfade instead of a hard clip-path reveal, with `--duration-sky: 2.4s`.
-- Default letter is Jomar's dedication to KC: `Dear KC,`, the supplied body, `Love Always,`, and `Jomar`; message limit is `2400`; default photo/caption are empty.
+- Default letter is Jhon Mark's exact dedication to KC: `Dear KC,`, the supplied body, `Love always,`, and `Jhon Mark`; message limit is `2400`; default photo/caption are empty.
 - Wax seal and site icon both use the `JM` monogram.
 - `RootLayout` uses an explicit `{ children: ReactNode }` type instead of `LayoutProps<"/">` because generated route types are unavailable before the first dev/build run.
 - Hash decoding and drawer draft seeding are applied from mount/open effects through a zero-delay timer to satisfy React 19's `set-state-in-effect` lint rule while keeping browser reads in effects.
@@ -31,6 +31,10 @@ Last updated: 2026-11-26
 - GitHub Pages uses a project-site base path from `actions/configure-pages`; `NEXT_PUBLIC_BASE_PATH` feeds `withBasePath()` for audio assets so `/audio/*.mp3` resolves under `/<repo>/`.
 - Target repo is `https://github.com/Jian165/Letter.git`; expected Pages URL is `https://jian165.github.io/Letter/`.
 - Sealed builds show a visible CC BY credit line below the open letter actions because the attribution drawer is hidden.
+- Music volume fades clamp progress and target values, guard every `audio.volume` write with `[BackgroundMusic]` logging, and retarget an active fade when volume/mute changes; this prevents negative-volume `IndexSizeError`.
+- The exact KC dedication letter supplied by the user is now stored verbatim in both `DEFAULT_LETTER` and `SEALED_LETTER`; `Dear KC,` is rendered from `recipient`, the body starts at `Hi, love.`, and the closing is `Love always,` + `Jhon Mark`.
+- Sealed builds expose a session-only volume slider between the actions and the CC BY credit; it is a playback control, not a letter-editing control.
+- Paper crease hairlines live inside the scrolling letter surface so they move with the text.
 - The earlier owner-PIN lock plan was not implemented; sealed immutability comes from the static build, not browser storage.
 
 ## Problems solved
@@ -44,20 +48,20 @@ Last updated: 2026-11-26
 
 ## Current state
 
-- All planned features, follow-up polish, sealed deployment mode, and visible sealed CC BY credit are implemented; typecheck, lint, build, and static smoke tests pass.
+- All planned features, follow-up polish, sealed deployment mode, visible sealed CC BY credit, exact letter content, sealed volume slider, scrolling creases, and guarded music fades are implemented; typecheck, lint, sealed build, and static smoke tests pass.
 - Static smoke test confirmed `/Letter/`, `/Letter/icon.svg`, and all three `/Letter/audio/*.mp3` routes return 200 with correct content types; built HTML has no editor controls.
 - Initial commit `f0a632c` was pushed to `main` at `https://github.com/Jian165/Letter.git`; remote uses SSH because HTTPS credentials are unavailable.
 - Workflow run #1 started from the push but failed because GitHub Pages is not enabled/configured to GitHub Actions; `actions/configure-pages@v5` cannot auto-enable with `GITHUB_TOKEN`.
 - `AGENTS.md` exists with the generated Next.js agent rules; it requires reading relevant guides in `node_modules/next/dist/docs/` before Next-specific changes.
-- No manual browser/visual QA has been performed yet at mobile and desktop sizes, and interactive music playback has not been verified in a browser.
+- Browser QA previously surfaced a negative-volume `IndexSizeError`; the fix is implemented and build-verified, but a fresh browser pass at mobile/desktop sizes is still needed to confirm playback, slider, and crease behavior.
 - No default Polaroid photo is bundled; the first visit intentionally shows no photo.
 
 ## Next session starts with
 
 - Run `/remember restore`, summarize, and get confirmation.
-- Ask the user to enable GitHub Pages in repo Settings → Pages → Build and deployment → Source: GitHub Actions, then rerun workflow run #1 or push a new commit.
+- Give the user the exact GitHub Pages steps: Settings → Pages → Build and deployment → Source: GitHub Actions → Save, then rerun the workflow.
 - After deployment succeeds, confirm the live Pages URL `https://jian165.github.io/Letter/` and that audio/credit/icon routes work.
-- Then perform manual browser QA at mobile/desktop widths: unfold/fold, personalization on the editable build, copy link, reload from hash, local photo preview, reduced motion, and actual music playback.
+- Then perform manual browser QA at mobile/desktop widths: unfold/fold, sealed volume slider, scrolling crease, personalization on the editable build, copy link, reload from hash, local photo preview, reduced motion, and actual music playback with no console errors.
 - Optionally add a default Polaroid photo only if the user wants one; the current default is intentionally photo-free.
 
 ## Open questions

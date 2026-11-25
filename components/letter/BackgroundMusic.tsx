@@ -15,16 +15,35 @@ type Props = {
 };
 
 function getFadeDurationMs(): number {
-  const raw = window
-    .getComputedStyle(document.documentElement)
-    .getPropertyValue("--duration-music-fade")
-    .trim();
-  const seconds = Number.parseFloat(raw);
-  return Number.isFinite(seconds) ? seconds * 1000 : 0;
+  try {
+    const raw = window
+      .getComputedStyle(document.documentElement)
+      .getPropertyValue("--duration-music-fade")
+      .trim();
+    const seconds = Number.parseFloat(raw);
+    return Number.isFinite(seconds) ? seconds * 1000 : 0;
+  } catch (error) {
+    console.warn("[BackgroundMusic] fade duration unavailable", error);
+    return 0;
+  }
 }
 
 function prefersReducedMotion(): boolean {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  try {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  } catch (error) {
+    console.warn("[BackgroundMusic] reduced-motion check failed", error);
+    return false;
+  }
+}
+
+function setAudioVolume(audio: HTMLAudioElement, input: number): void {
+  const volume = Number.isFinite(input) ? Math.min(1, Math.max(0, input)) : 0;
+  try {
+    audio.volume = volume;
+  } catch (error) {
+    console.warn("[BackgroundMusic] volume update failed", error);
+  }
 }
 
 export function BackgroundMusic({
@@ -44,19 +63,6 @@ export function BackgroundMusic({
   useEffect(() => {
     callbacksRef.current = { onPlayStateChange, onError };
   }, [onPlayStateChange, onError]);
-
-  useEffect(() => {
-    volumeRef.current = volume;
-    mutedRef.current = muted;
-    const audio = audioRef.current;
-    if (!audio) {
-      return;
-    }
-    audio.muted = muted;
-    if (fadeFrameRef.current === null) {
-      audio.volume = muted ? 0 : volume;
-    }
-  }, [volume, muted]);
 
   const cancelFade = useCallback((): void => {
     if (fadeFrameRef.current !== null) {
@@ -80,9 +86,10 @@ export function BackgroundMusic({
         return;
       }
 
+      const targetVolume = Math.min(1, Math.max(0, target));
       const durationMs = getFadeDurationMs();
       if (durationMs <= 0 || prefersReducedMotion()) {
-        audio.volume = target;
+        setAudioVolume(audio, targetVolume);
         onComplete?.();
         return;
       }
@@ -91,8 +98,8 @@ export function BackgroundMusic({
       const startTime = performance.now();
 
       const step = (now: number): void => {
-        const progress = Math.min((now - startTime) / durationMs, 1);
-        audio.volume = startVolume + (target - startVolume) * progress;
+        const progress = Math.min(1, Math.max(0, (now - startTime) / durationMs));
+        setAudioVolume(audio, startVolume + (targetVolume - startVolume) * progress);
         if (progress < 1) {
           fadeFrameRef.current = window.requestAnimationFrame(step);
           return;
@@ -105,6 +112,21 @@ export function BackgroundMusic({
     },
     [cancelFade],
   );
+
+  useEffect(() => {
+    volumeRef.current = volume;
+    mutedRef.current = muted;
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
+    }
+    audio.muted = muted;
+    if (fadeFrameRef.current !== null) {
+      fadeVolume(desiredVolume());
+      return;
+    }
+    setAudioVolume(audio, desiredVolume());
+  }, [desiredVolume, fadeVolume, muted, volume]);
 
   const stop = useCallback((): void => {
     const audio = audioRef.current;
@@ -152,7 +174,7 @@ export function BackgroundMusic({
         }
 
         audio.muted = mutedRef.current;
-        audio.volume = 0;
+        setAudioVolume(audio, 0);
 
         if (typeof audio.play !== "function") {
           return;
