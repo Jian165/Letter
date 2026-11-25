@@ -98,3 +98,4 @@ Update this file after every completed feature. Any AI agent reading this should
 - 2026-11-26: The sunrise crossfade, JM seal, `app/icon.svg`, and the new default letter are implemented; typecheck, lint, build, and production smoke test pass.
 - 2026-11-26: Sealed static export uses `output: "export"` plus `build:sealed`; `.github/workflows/deploy.yml` deploys `out/` from `main` to GitHub Pages with project base path.
 - 2026-11-26: Target repo is `Jian165/Letter`; expected Pages URL is `https://jian165.github.io/Letter/`. Sealed mode shows a visible CC BY credit line because the drawer is hidden.
+- 2026-11-26: Initial commit `f0a632c` pushed to `main`; workflow run #1 failed because Pages is not yet enabled/configured to GitHub Actions, which requires a one-time settings change by the repo owner.

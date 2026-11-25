@@ -44,8 +44,10 @@ Last updated: 2026-11-26
 
 ## Current state
 
-- All planned features, follow-up polish, and the sealed deployment mode are implemented; typecheck, lint, build, and production smoke test pass.
-- Smoke test confirmed `/`, `/icon.svg`, and all three `/audio/*.mp3` routes return 200, with correct `image/svg+xml` and `audio/mpeg` content types.
+- All planned features, follow-up polish, sealed deployment mode, and visible sealed CC BY credit are implemented; typecheck, lint, build, and static smoke tests pass.
+- Static smoke test confirmed `/Letter/`, `/Letter/icon.svg`, and all three `/Letter/audio/*.mp3` routes return 200 with correct content types; built HTML has no editor controls.
+- Initial commit `f0a632c` was pushed to `main` at `https://github.com/Jian165/Letter.git`; remote uses SSH because HTTPS credentials are unavailable.
+- Workflow run #1 started from the push but failed because GitHub Pages is not enabled/configured to GitHub Actions; `actions/configure-pages@v5` cannot auto-enable with `GITHUB_TOKEN`.
 - `AGENTS.md` exists with the generated Next.js agent rules; it requires reading relevant guides in `node_modules/next/dist/docs/` before Next-specific changes.
 - No manual browser/visual QA has been performed yet at mobile and desktop sizes, and interactive music playback has not been verified in a browser.
 - No default Polaroid photo is bundled; the first visit intentionally shows no photo.
@@ -53,8 +55,8 @@ Last updated: 2026-11-26
 ## Next session starts with
 
 - Run `/remember restore`, summarize, and get confirmation.
-- Verify sealed mode with `npm run build:sealed` and a static server at a simulated `/<repo>/` base path; confirm no editor controls and working audio icon paths.
-- Create the GitHub repo, set Pages source to GitHub Actions, push `dev`/`main`, and confirm the live Pages URL.
+- Ask the user to enable GitHub Pages in repo Settings → Pages → Build and deployment → Source: GitHub Actions, then rerun workflow run #1 or push a new commit.
+- After deployment succeeds, confirm the live Pages URL `https://jian165.github.io/Letter/` and that audio/credit/icon routes work.
 - Then perform manual browser QA at mobile/desktop widths: unfold/fold, personalization on the editable build, copy link, reload from hash, local photo preview, reduced motion, and actual music playback.
 - Optionally add a default Polaroid photo only if the user wants one; the current default is intentionally photo-free.
 
