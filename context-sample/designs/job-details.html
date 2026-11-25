@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Backend Developer - JobPilot</title>
+<style>
+  :root{
+    --bg: #f4f5f9;
+    --card: #ffffff;
+    --border: #e7e8ee;
+    --text-primary: #14151a;
+    --text-secondary: #6b7080;
+    --text-muted: #9498a6;
+    --purple: #6c5ce9;
+    --purple-light: #efecfd;
+    --green: #16a34a;
+    --green-bg: #e7f8ee;
+    --blue-bg: #e8f1ff;
+    --blue-icon: #3b7dff;
+    --lavender-bg: #f1edfd;
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+  }
+
+  /* Top nav */
+  .navbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 16px 40px;
+    background:#fff;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    font-size:18px;
+  }
+  .brand-logo{
+    width:32px;
+    height:32px;
+    border-radius:8px;
+    background: var(--purple);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    font-size:16px;
+  }
+  .nav-links{
+    display:flex;
+    align-items:center;
+    gap:36px;
+    font-size:15px;
+    color: var(--text-primary);
+  }
+  .nav-links a{
+    text-decoration:none;
+    color:inherit;
+  }
+  .nav-links .active{
+    color: var(--purple);
+    font-weight:600;
+  }
+  .nav-icon{
+    width:22px;height:22px;border-radius:50%;
+    border:1.5px solid #c9cbd6;
+    display:flex;align-items:center;justify-content:center;
+    color:#9498a6;
+  }
+  .signout{
+    display:flex;align-items:center;gap:6px;
+    color:var(--text-secondary);
+  }
+
+  /* Page */
+  .page{
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+  }
+  .back{
+    display:flex;
+    align-items:center;
+    gap:4px;
+    color: var(--text-secondary);
+    font-size:15px;
+    margin-bottom:18px;
+  }
+
+  .card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 26px 28px;
+    margin-bottom: 20px;
+  }
+
+  /* Header card */
+  .header-card{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .header-left{
+    display:flex;
+    align-items:center;
+    gap:16px;
+  }
+  .company-icon{
+    width:56px;height:56px;
+    border-radius:12px;
+    background: #f1f2f6;
+    display:flex;align-items:center;justify-content:center;
+    color:#8b8f9e;
+    flex-shrink:0;
+  }
+  .header-left h1{
+    font-size: 24px;
+    margin: 0 0 6px;
+  }
+  .header-meta{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    color: var(--text-secondary);
+    font-size:14.5px;
+  }
+  .match-score{
+    background: var(--green-bg);
+    color: var(--green);
+    font-weight:600;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size:13.5px;
+  }
+  .btn-outline{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--border);
+    background:#fff;
+    padding: 11px 18px;
+    border-radius: 10px;
+    font-size:14.5px;
+    font-weight:600;
+    color: var(--text-primary);
+    cursor:pointer;
+    white-space:nowrap;
+  }
+
+  /* Stats row */
+  .stats-row{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .stat-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .stat-icon{
+    width:40px;height:40px;
+    border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:18px;
+    flex-shrink:0;
+  }
+  .stat-icon.dollar{ background: var(--green-bg); color: var(--green); }
+  .stat-icon.location{ background: var(--blue-bg); color: var(--blue-icon); }
+  .stat-icon.job{ background: var(--lavender-bg); color: var(--purple); }
+  .stat-icon.date{ background: #f1f2f6; color:#8b8f9e; }
+  .stat-value{
+    font-weight:700;
+    font-size:15.5px;
+    margin-bottom:2px;
+  }
+  .stat-label{
+    font-size:12px;
+    letter-spacing:0.04em;
+    color: var(--text-muted);
+    text-transform:uppercase;
+  }
+
+  /* Section titles */
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    font-size:16px;
+    margin-bottom: 18px;
+  }
+  .section-title .icon-badge{
+    width:32px;height:32px;
+    border-radius:8px;
+    background: var(--lavender-bg);
+    color: var(--purple);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;
+  }
+  .eyebrow{
+    font-size: 12px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    color: var(--text-muted);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow .icon-badge{
+    width:32px;height:32px;
+    border-radius:8px;
+    background: var(--green-bg);
+    color: var(--green);
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;
+  }
+
+  .reasoning-text{
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-primary);
+  }
+
+  /* Skills section */
+  .skills-label{
+    font-size:14px;
+    color: var(--text-muted);
+    margin-bottom:10px;
+  }
+  .pill-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom: 22px;
+  }
+  .pill{
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight:600;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+  .pill.have{
+    background: var(--green-bg);
+    color: var(--green);
+  }
+  .pill.gap{
+    background: var(--lavender-bg);
+    color: var(--purple);
+  }
+
+  .job-desc-text{
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-primary);
+  }
+
+  /* Company research */
+  .research-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom: 18px;
+  }
+  .btn-purple{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background: var(--purple);
+    color:#fff;
+    border:none;
+    padding: 11px 20px;
+    border-radius: 10px;
+    font-size:14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .empty-state{
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 50px 30px;
+    text-align:center;
+  }
+  .empty-icon{
+    width:52px;height:52px;
+    border-radius:12px;
+    background: #f1f2f6;
+    color:#8b8f9e;
+    display:flex;align-items:center;justify-content:center;
+    margin: 0 auto 18px;
+    font-size:22px;
+  }
+  .empty-state h3{
+    margin: 0 0 8px;
+    font-size:16px;
+  }
+  .empty-state p{
+    margin:0;
+    color: var(--text-secondary);
+    font-size:14.5px;
+    max-width: 420px;
+    margin: 0 auto;
+    line-height:1.6;
+  }
+
+  .apply-btn{
+    display:block;
+    width:100%;
+    background: var(--purple);
+    color:#fff;
+    text-align:center;
+    padding: 18px;
+    border-radius: 12px;
+    font-size:16px;
+    font-weight:700;
+    border:none;
+    cursor:pointer;
+  }
+
+  @media (max-width: 720px){
+    .navbar{ padding: 14px 18px; }
+    .nav-links{ gap:16px; font-size:13px; }
+    .stats-row{ grid-template-columns: repeat(2, 1fr); }
+    .header-card{ flex-direction:column; align-items:flex-start; gap:16px; }
+    .header-left{ align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="navbar">
+    <div class="brand">
+      <div class="brand-logo">🅹</div>
+      JobPilot
+    </div>
+    <div class="nav-links">
+      <a href="#">Dashboard</a>
+      <a href="#" class="active">Find Jobs</a>
+      <a href="#">Profile</a>
+      <span class="nav-icon">●</span>
+      <a href="#" class="signout">⏻ Sign out</a>
+    </div>
+  </div>
+
+  <div class="page">
+    <div class="back">‹ Back to Jobs</div>
+
+    <!-- Header card -->
+    <div class="card header-card">
+      <div class="header-left">
+        <div class="company-icon">🏢</div>
+        <div>
+          <h1>Backend Developer</h1>
+          <div class="header-meta">
+            <span>Insight Global</span>
+            <span>•</span>
+            <span class="match-score">85% Match Score</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-outline">↗ View Job Post</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon dollar">$</div>
+        <div>
+          <div class="stat-value">$101k – $101k</div>
+          <div class="stat-label">Salary Est.</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon location">📍</div>
+        <div>
+          <div class="stat-value">Newark, Ess...</div>
+          <div class="stat-label">Location</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon job">💼</div>
+        <div>
+          <div class="stat-value">—</div>
+          <div class="stat-label">Job Type</div>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon date">🗓</div>
+        <div>
+          <div class="stat-value">1 hour ago</div>
+          <div class="stat-label">Date Found</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Match Reasoning -->
+    <div class="card">
+      <div class="eyebrow">
+        <span class="icon-badge">✨</span>
+        AI MATCH REASONING
+      </div>
+      <p class="reasoning-text">
+        The candidate possesses a strong background in backend development with over 10 years of experience,
+        which exceeds the job's requirement of 5-8 years. They have expertise in Node.js, RESTful APIs, and AWS,
+        aligning well with the job's technical requirements. The candidate's prior work also demonstrates proficiency
+        in cloud-based systems and an ability to work across multiple technologies. However, a lack of explicit
+        experience in Java (Spring Boot) represents a gap in the job's demands.
+      </p>
+    </div>
+
+    <!-- Required skills -->
+    <div class="card">
+      <div style="font-weight:700; font-size:13px; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:20px;">
+        REQUIRED SKILLS VS YOUR PROFILE
+      </div>
+
+      <div class="skills-label">You have</div>
+      <div class="pill-row">
+        <span class="pill have">✓ Node.js</span>
+        <span class="pill have">✓ RESTful APIs</span>
+        <span class="pill have">✓ AWS</span>
+        <span class="pill have">✓ Problem-solving</span>
+        <span class="pill have">✓ Backend development</span>
+      </div>
+
+      <div class="skills-label">Gap skills</div>
+      <div class="pill-row" style="margin-bottom:0;">
+        <span class="pill gap">✕ Java (Spring Boot)</span>
+      </div>
+    </div>
+
+    <!-- Job Description -->
+    <div class="card">
+      <div class="section-title">
+        <span class="icon-badge" style="background:#f1f2f6; color:#8b8f9e;">📄</span>
+        Job Description
+      </div>
+      <p class="job-desc-text">
+        Job Description - 5-8 years of backend development experience - Strong proficiency in Node.js and/or Java
+        (Spring Boot) - Experience building and consuming RESTful APIs - Exposure to cloud-based development in
+        AWS (deployments, monitoring, logging) - Ability to work across multiple technologies and systems - Strong
+        problem-solving skills and attention to detail - Effective communication skills and willingness to collaborate
+        across teams We are a company committed to creating diverse and inclusi...
+      </p>
+    </div>
+
+    <!-- Company Research -->
+    <div class="card">
+      <div class="research-header">
+        <div class="section-title" style="margin-bottom:0;">
+          <span class="icon-badge">🏢</span>
+          Company Research
+        </div>
+        <button class="btn-purple">🔍 Research Company</button>
+      </div>
+
+      <div class="empty-state">
+        <div class="empty-icon">🏢</div>
+        <h3>No research yet</h3>
+        <p>Click "Research Company" to let the AI browse Insight Global's public pages and build a dossier.</p>
+      </div>
+    </div>
+
+    <button class="apply-btn">Apply Now at Insight Global</button>
+  </div>
+
+</body>
+</html>

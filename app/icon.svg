@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="JM wax seal">
+  <defs>
+    <radialGradient id="wax" cx="32%" cy="28%" r="72%">
+      <stop offset="0%" stop-color="#e27a48" />
+      <stop offset="68%" stop-color="#c4532b" />
+      <stop offset="100%" stop-color="#9b3b1a" />
+    </radialGradient>
+  </defs>
+  <path
+    d="M32 4c8.6 0 12.2 5.1 18 7.4 5.7 2.2 10.5 1.5 10.5 9.8 0 8.4-4.1 11.5-4.1 19.2 0 7.6 2.4 15.4-4.8 18.2-7.1 2.8-12.1-2.5-19.6-2.5S15 61.4 8.1 58.3C1.2 55.2 4.2 47.9 4.2 41.8c0-7.8-4.1-10.8-4.1-19.2C.1 14.3 4.9 15 10.6 12.8 16.4 10.5 23.4 4 32 4z"
+    fill="url(#wax)"
+  />
+  <circle cx="32" cy="32" r="22" fill="none" stroke="#ffecd1" stroke-opacity="0.38" stroke-width="1.5" />
+  <text
+    x="32"
+    y="33"
+    fill="#fff4e4"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="25"
+    font-weight="700"
+    letter-spacing="1"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >
+    JM
+  </text>
+</svg>
